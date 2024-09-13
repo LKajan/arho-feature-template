@@ -1,7 +1,6 @@
 from qgis.PyQt.QtWidgets import QWidget
 
-from arho_feature_template.core.feature_template_library import \
-    FeatureTemplateLibrary
+from arho_feature_template.core.feature_template_library import FeatureTemplateLibrary
 from arho_feature_template.qgis_plugin_tools.tools.resources import load_ui
 
 
