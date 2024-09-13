@@ -1,19 +1,17 @@
-
 from qgis.PyQt.QtWidgets import QWidget
 
-from arho_feature_template.core.feature_template_library import FeatureTemplateLibrary
-from arho_feature_template.qgis_plugin_tools.tools.resources import load_ui  # noqa F401
+from arho_feature_template.core.feature_template_library import \
+    FeatureTemplateLibrary
+from arho_feature_template.qgis_plugin_tools.tools.resources import load_ui
 
 
-# class AddFeaturePanel(QWidget, load_ui("add_feature_panel.ui")):  # NOTE: UI file does not exist yet
-class AddFeaturePanel(QWidget):
+class AddFeaturePanel(QWidget, load_ui("add_feature_panel.ui")):
     """Dock widget for selecting a feature template."""
 
     def __init__(self, feature_template_library: FeatureTemplateLibrary):
         super().__init__()
-        # self.setupUi(self)
+        self.setupUi(self)
         self.initialize_from_library(feature_template_library)
-
 
     def initialize_from_library(self, feature_template_library: FeatureTemplateLibrary):
         # Initialization logic

@@ -8,11 +8,15 @@ from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction, QWidget
 from qgis.utils import iface
 
-from arho_feature_template.core.add_feature_panel import AddFeaturePanel
-from arho_feature_template.core.feature_template_library import FeatureTemplateLibrary
-from arho_feature_template.qgis_plugin_tools.tools.custom_logging import setup_logger, teardown_logger
-from arho_feature_template.qgis_plugin_tools.tools.i18n import setup_translation
-from arho_feature_template.qgis_plugin_tools.tools.resources import plugin_name, resources_path
+from arho_feature_template.core.feature_template_library import \
+    FeatureTemplateLibrary
+from arho_feature_template.core.panels.add_feature_panel import AddFeaturePanel
+from arho_feature_template.qgis_plugin_tools.tools.custom_logging import (
+    setup_logger, teardown_logger)
+from arho_feature_template.qgis_plugin_tools.tools.i18n import \
+    setup_translation
+from arho_feature_template.qgis_plugin_tools.tools.resources import (
+    plugin_name, resources_path)
 
 LIBRARY_JSON = resources_path("asemakaava-template-library-test.json")
 

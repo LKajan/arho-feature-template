@@ -1,13 +1,13 @@
-from qgis.PyQt.QtWidgets import QDialog
-
 from arho_feature_template.core.feature_template import FeatureTemplate
+from arho_feature_template.core.forms.feature_attribute_form import \
+    FeatureAttributeForm
 
 
-class AddFeatureForm(QDialog):
+class AddFeatureForm(FeatureAttributeForm):
     """Dialog for filling and saving attribute data that opens when a new feature has been digitized."""
 
     def __init__(self, feature_template: FeatureTemplate):
-        self.feature_template = feature_template
+        super().__init__(feature_template)
 
     def _init_feature_attributes(self):
         # for feature_attribute in self.feature_template.feature_attributes:
