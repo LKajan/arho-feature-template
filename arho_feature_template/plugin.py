@@ -2,15 +2,19 @@ from __future__ import annotations
 
 from typing import Callable
 
-from qgis.PyQt.QtCore import QCoreApplication, QTranslator
+from qgis.gui import QgsDockWidget
+from qgis.PyQt.QtCore import QCoreApplication, Qt, QTranslator
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction, QWidget
 from qgis.utils import iface
 
+from arho_feature_template.core.feature_template_library import FeatureTemplateLibrary
+from arho_feature_template.core.panels.template_library_panel import TemplateLibraryPanel
 from arho_feature_template.qgis_plugin_tools.tools.custom_logging import setup_logger, teardown_logger
 from arho_feature_template.qgis_plugin_tools.tools.i18n import setup_translation
-from arho_feature_template.qgis_plugin_tools.tools.resources import plugin_name
+from arho_feature_template.qgis_plugin_tools.tools.resources import plugin_name, resources_path
 
+LIBRARY_JSON = resources_path("asemakaava-template-library-test.json")
 
 class Plugin:
     """QGIS Plugin Implementation."""
@@ -32,6 +36,9 @@ class Plugin:
 
         self.actions: list[QAction] = []
         self.menu = Plugin.name
+
+        # Create and initialize default feature template library
+        self.active_library = FeatureTemplateLibrary(LIBRARY_JSON)
 
     def add_action(
         self,
@@ -107,7 +114,7 @@ class Plugin:
             text=Plugin.name,
             callback=self.run,
             parent=iface.mainWindow(),
-            add_to_toolbar=False,
+            add_to_toolbar=True,
         )
 
     def onClosePlugin(self) -> None:  # noqa N802
@@ -121,5 +128,9 @@ class Plugin:
         teardown_logger(Plugin.name)
 
     def run(self) -> None:
-        """Run method that performs all the real work"""
-        print("Hello QGIS plugin")  # noqa: T201
+        self.feature_template_dock= QgsDockWidget()
+        self.add_feature_panel = TemplateLibraryPanel(self.active_library)
+        self.feature_template_dock.setWidget(self.add_feature_panel)
+        self.feature_template_dock.setWindowTitle("ARHO")  # NOTE: Placeholder name
+
+        iface.addDockWidget(Qt.RightDockWidgetArea, self.feature_template_dock)
