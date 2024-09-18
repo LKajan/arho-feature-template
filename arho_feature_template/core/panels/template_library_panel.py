@@ -1,10 +1,14 @@
+from importlib import resources
+
+from qgis.PyQt import uic
 from qgis.PyQt.QtWidgets import QWidget
 
 from arho_feature_template.core.feature_template_library import FeatureTemplateLibrary
-from arho_feature_template.qgis_plugin_tools.tools.resources import load_ui
 
+ui_path = resources.files(__package__) / "template_library_panel.ui"
+FormClass, _ = uic.loadUiType(ui_path)
 
-class AddFeaturePanel(QWidget, load_ui("add_feature_panel.ui")):
+class TemplateLibraryPanel(QWidget, FormClass):
     """Dock widget for selecting a feature template."""
 
     def __init__(self, feature_template_library: FeatureTemplateLibrary):

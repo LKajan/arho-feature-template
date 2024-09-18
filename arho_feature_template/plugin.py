@@ -9,7 +9,7 @@ from qgis.PyQt.QtWidgets import QAction, QWidget
 from qgis.utils import iface
 
 from arho_feature_template.core.feature_template_library import FeatureTemplateLibrary
-from arho_feature_template.core.panels.add_feature_panel import AddFeaturePanel
+from arho_feature_template.core.panels.template_library_panel import TemplateLibraryPanel
 from arho_feature_template.qgis_plugin_tools.tools.custom_logging import setup_logger, teardown_logger
 from arho_feature_template.qgis_plugin_tools.tools.i18n import setup_translation
 from arho_feature_template.qgis_plugin_tools.tools.resources import plugin_name, resources_path
@@ -129,7 +129,7 @@ class Plugin:
 
     def run(self) -> None:
         self.feature_template_dock= QgsDockWidget()
-        self.add_feature_panel = AddFeaturePanel(self.active_library)
+        self.add_feature_panel = TemplateLibraryPanel(self.active_library)
         self.feature_template_dock.setWidget(self.add_feature_panel)
         self.feature_template_dock.setWindowTitle("ARHO")  # NOTE: Placeholder name
 
