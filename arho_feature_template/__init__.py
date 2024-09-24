@@ -2,9 +2,9 @@ import os
 from typing import TYPE_CHECKING
 
 from arho_feature_template.qgis_plugin_tools.infrastructure.debugging import (
-    setup_debugpy,  # noqa F401
-    setup_ptvsd,  # noqa F401
-    setup_pydevd,  # noqa F401
+    setup_debugpy,  # noqa: F401
+    setup_ptvsd,  # noqa: F401
+    setup_pydevd,  # noqa: F401
 )
 
 if TYPE_CHECKING:
