@@ -30,19 +30,17 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip3 install virtualenv
-          virtualenv .venv --system-site-packages
-          source .venv/bin/activate
-          pip install -qr requirements-dev.txt --no-deps
-          pip install . --no-deps
+          apt update && apt install python3-venv -y
+          python3 -m venv --system-site-packages .venv
+          .venv/bin/python -m pip install -U setuptools pip
+          .venv/bin/pip install -r requirements-dev.txt
 
       - name: Run tests
         env:
           QGIS_PLUGIN_IN_CI: 1
           QT_QPA_PLATFORM: offscreen
         run: |
-          source .venv/bin/activate
-          pytest
+          .venv/bin/pytest
 
   windows_tests:
     runs-on: windows-latest
