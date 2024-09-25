@@ -12,6 +12,7 @@ packages = ["arho_feature_template"]
 
 [tool.pytest.ini_options]
 addopts = "-v"
+testpaths = "tests"
 
 [tool.coverage.report]
 omit = ["arho_feature_template/qgis_plugin_tools/*"]
