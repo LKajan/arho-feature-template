@@ -10,7 +10,7 @@ class AddFeatureForm(FeatureAttributeForm):
 
     def _init_feature_attributes(self):
         # for feature_attribute in self.feature_template.feature_attributes:
-            # # Create the form here, add rows with labels and input fields
+        # # Create the form here, add rows with labels and input fields
         pass
 
     def save(self):

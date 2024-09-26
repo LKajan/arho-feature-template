@@ -16,6 +16,7 @@ from arho_feature_template.qgis_plugin_tools.tools.resources import plugin_name,
 
 LIBRARY_JSON = resources_path("asemakaava-template-library-test.json")
 
+
 class Plugin:
     """QGIS Plugin Implementation."""
 
@@ -128,7 +129,7 @@ class Plugin:
         teardown_logger(Plugin.name)
 
     def run(self) -> None:
-        self.feature_template_dock= QgsDockWidget()
+        self.feature_template_dock = QgsDockWidget()
         self.add_feature_panel = TemplateLibraryPanel(self.active_library)
         self.feature_template_dock.setWidget(self.add_feature_panel)
         self.feature_template_dock.setWindowTitle("ARHO")  # NOTE: Placeholder name

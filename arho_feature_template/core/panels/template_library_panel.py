@@ -8,7 +8,8 @@ from arho_feature_template.core.feature_template_library import FeatureTemplateL
 ui_path = resources.files(__package__) / "template_library_panel.ui"
 FormClass, _ = uic.loadUiType(ui_path)
 
-class TemplateLibraryPanel(QWidget, FormClass):
+
+class TemplateLibraryPanel(QWidget, FormClass):  # type: ignore
     """Dock widget for selecting a feature template."""
 
     def __init__(self, feature_template_library: FeatureTemplateLibrary):
