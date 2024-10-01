@@ -17,7 +17,20 @@
         "python.testing.pytestArgs": [
             "test"
         ],
-        "python.testing.unittestEnabled": false
+        "python.testing.unittestEnabled": false,
+        "json.schemas": [
+            {
+                "fileMatch": [
+                    "**/template_libraries/*.json"
+                ],
+                "url": "./arho_feature_template/resources/template_libraries/schema/template_library.schema.json"
+            }
+        ],
+        "yaml.schemas": {
+            "./arho_feature_template/resources/template_libraries/schema/template_library.schema.json": [
+                "**/template_libraries/*.yaml"
+            ]
+        }
     },
     "extensions": {
         "recommendations": [
@@ -25,7 +38,8 @@
             "ms-python.flake8",
             "ms-python.mypy-type-checker",
             "charliermarsh.ruff",
-            "editorconfig.editorconfig"
+            "editorconfig.editorconfig",
+            "redhat.vscode-yaml"
         ]
     },
     "launch": {
