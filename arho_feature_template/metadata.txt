@@ -1,6 +1,6 @@
 [general]
 name=ARHO feature template
-description=
+description=Create new features from configurable templates
 about=
 version=0.1.0
 qgisMinimumVersion=3.16

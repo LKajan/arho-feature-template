@@ -6,13 +6,14 @@ debugpy
 
 # Linting and formatting
 pre-commit
-mypy
 ruff
 flake8
 flake8-qgis
 
-# Stubs
+# Types
+mypy
 PyQt5-stubs
+types-PyYAML
 
 # repo itself
 -e file:.
