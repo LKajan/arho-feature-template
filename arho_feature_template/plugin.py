@@ -1,20 +1,21 @@
 from __future__ import annotations
 
-from typing import Callable
+from typing import TYPE_CHECKING, Callable, cast
 
-from qgis.gui import QgsDockWidget
 from qgis.PyQt.QtCore import QCoreApplication, Qt, QTranslator
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction, QWidget
 from qgis.utils import iface
 
-from arho_feature_template.core.feature_template_library import FeatureTemplateLibrary
-from arho_feature_template.gui.panels.template_library_panel import TemplateLibraryPanel
+from arho_feature_template.core.feature_template_library import FeatureTemplater, TemplateGeometryDigitizeMapTool
 from arho_feature_template.qgis_plugin_tools.tools.custom_logging import setup_logger, teardown_logger
 from arho_feature_template.qgis_plugin_tools.tools.i18n import setup_translation
-from arho_feature_template.qgis_plugin_tools.tools.resources import plugin_name, resources_path
+from arho_feature_template.qgis_plugin_tools.tools.resources import plugin_name
 
-LIBRARY_JSON = resources_path("asemakaava-template-library-test.json")
+if TYPE_CHECKING:
+    from qgis.gui import QgisInterface, QgsMapTool
+
+    iface: QgisInterface = cast("QgisInterface", iface)  # type: ignore[no-redef]
 
 
 class Plugin:
@@ -34,25 +35,24 @@ class Plugin:
             QCoreApplication.installTranslator(self.translator)
         else:
             pass
-
         self.actions: list[QAction] = []
         self.menu = Plugin.name
-
-        # Create and initialize default feature template library
-        self.active_library = FeatureTemplateLibrary(LIBRARY_JSON)
 
     def add_action(
         self,
         icon_path: str,
         text: str,
-        callback: Callable,
+        triggered_callback: Callable | None = None,
         *,
+        toggled_callback: Callable | None = None,
+        object_name: str | None = None,
         enabled_flag: bool = True,
         add_to_menu: bool = True,
         add_to_toolbar: bool = True,
         status_tip: str | None = None,
         whats_this: str | None = None,
         parent: QWidget | None = None,
+        checkable: bool = False,
     ) -> QAction:
         """Add a toolbar icon to the toolbar.
 
@@ -88,7 +88,12 @@ class Plugin:
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
         # noinspection PyUnresolvedReferences
-        action.triggered.connect(callback)
+        if triggered_callback:
+            action.triggered.connect(triggered_callback)
+
+        if toggled_callback:
+            action.toggled.connect(toggled_callback)
+
         action.setEnabled(enabled_flag)
 
         if status_tip is not None:
@@ -97,8 +102,13 @@ class Plugin:
         if whats_this is not None:
             action.setWhatsThis(whats_this)
 
+        if object_name:
+            action.setObjectName(object_name)
+
+        if checkable:
+            action.setCheckable(True)
+
         if add_to_toolbar:
-            # Adds plugin icon to Plugins toolbar
             iface.addToolBarIcon(action)
 
         if add_to_menu:
@@ -109,17 +119,26 @@ class Plugin:
         return action
 
     def initGui(self) -> None:  # noqa N802
-        """Create the menu entries and toolbar icons inside the QGIS GUI."""
-        self.add_action(
+        self.templater = FeatureTemplater()
+
+        iface.addDockWidget(Qt.RightDockWidgetArea, self.templater.template_dock)
+        self.templater.template_dock.visibilityChanged.connect(self.dock_visibility_changed)
+
+        iface.mapCanvas().mapToolSet.connect(self.templater.digitize_map_tool.deactivate)
+
+        self.template_dock_action = self.add_action(
             "",
-            text=Plugin.name,
-            callback=self.run,
-            parent=iface.mainWindow(),
+            "Feature Templates",
+            None,
+            toggled_callback=self.toggle_template_dock,
+            checkable=True,
+            add_to_menu=True,
             add_to_toolbar=True,
         )
 
-    def onClosePlugin(self) -> None:  # noqa N802
-        """Cleanup necessary items here when plugin dockwidget is closed"""
+    def on_map_tool_changed(self, new_tool: QgsMapTool, old_tool: QgsMapTool) -> None:  # noqa: ARG002
+        if not isinstance(new_tool, TemplateGeometryDigitizeMapTool):
+            self.template_dock_action.setChecked(False)
 
     def unload(self) -> None:
         """Removes the plugin menu item and icon from QGIS GUI."""
@@ -128,10 +147,10 @@ class Plugin:
             iface.removeToolBarIcon(action)
         teardown_logger(Plugin.name)
 
-    def run(self) -> None:
-        self.feature_template_dock = QgsDockWidget()
-        self.add_feature_panel = TemplateLibraryPanel(self.active_library)
-        self.feature_template_dock.setWidget(self.add_feature_panel)
-        self.feature_template_dock.setWindowTitle("ARHO")  # NOTE: Placeholder name
+        self.templater.template_dock.close()
 
-        iface.addDockWidget(Qt.RightDockWidgetArea, self.feature_template_dock)
+    def dock_visibility_changed(self, visible: bool) -> None:  # noqa: FBT001
+        self.template_dock_action.setChecked(visible)
+
+    def toggle_template_dock(self, show: bool) -> None:  # noqa: FBT001
+        self.templater.template_dock.setUserVisible(show)
