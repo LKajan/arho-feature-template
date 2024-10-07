@@ -1,6 +1,6 @@
 version: 1
 meta:
-  name: Asemakaava-kaavamääräyskirjasto
+  name: Asemakaavan kaavamääräykset
   version: "1.0"
 templates:
   - name: Simppeli kaavakohde
