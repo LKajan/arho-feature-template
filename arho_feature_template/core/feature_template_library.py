@@ -91,12 +91,25 @@ class FeatureTemplater:
         self.template_dock.library_selection.currentIndexChanged.connect(
             lambda: self.set_active_library(self.template_dock.library_selection.currentText())
         )
+        # Update template list when search text changes
+        self.template_dock.search_box.valueChanged.connect(self.on_template_search_text_changed)
 
         # Activate map tool when template selection changes
         self.template_model.itemChanged.connect(self.on_item_changed)
 
         self.digitize_map_tool = TemplateGeometryDigitizeMapTool(iface.mapCanvas(), iface.cadDockWidget())
         self.digitize_map_tool.digitizingCompleted.connect(self.ask_for_feature_attributes)
+
+    def on_template_search_text_changed(self, search_text: str):
+        for row in range(self.template_model.rowCount()):
+            item = self.template_model.item(row)
+
+            # If the search text is in the item's text, show the row
+            if search_text in item.text().lower():
+                self.template_dock.template_list.setRowHidden(row, False)
+            else:
+                # Otherwise, hide the row
+                self.template_dock.template_list.setRowHidden(row, True)
 
     def on_item_changed(self, item: TemplateItem) -> None:
         if item.checkState() == Qt.Checked:
