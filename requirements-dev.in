@@ -15,5 +15,8 @@ mypy
 PyQt5-stubs
 types-PyYAML
 
+# build testing/developing
+qgis-plugin-ci
+
 # repo itself
 -e file:.
