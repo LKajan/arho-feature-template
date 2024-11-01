@@ -18,6 +18,20 @@ pip install -r requirements-dev.txt -r requirements-test.txt
 
 For more detailed development instructions see [development](docs/development.md).
 
+### Manage dependecy packages
+Please use `uv` to compile the `reguirements.txt` files because Uv can produce multiplatform requirements files.
+```console
+uv pip compile --universal --python-version 3.9 -o requirements-dev.txt requirements-dev.in
+```
+
+Still use `pip` or `pip-sync` to install the requirements because `uv` doesn't respect the global site-packages.
+
+
+**Upgrading packages**  
+```
+uv pip compile --universal --python-version 3.9 --upgrade -o requirements-dev.txt requirements-dev.in
+```
+
 ### Testing the plugin on QGIS
 
 A symbolic link / directory junction should be created to the directory containing the installed plugins pointing to the dev plugin package.
