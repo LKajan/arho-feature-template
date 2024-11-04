@@ -38,7 +38,8 @@ jobs:
       - name: Set up Python 3.9
         uses: actions/setup-python@v5
         with:
-          python-version: 3.9
+          python-version: "3.9"
+          cache: "pip"
       - name: Install dependencies
         run: |
           sudo apt update && sudo apt install qtbase5-dev qttools5-dev-tools
@@ -54,8 +55,8 @@ jobs:
           echo "RELEASE_TAG=${RELEASE_TAG}"
           echo version=${{ needs.release.outputs.version }}
           echo tag=${{ needs.release.outputs.tag }}
-          qgis-plugin-ci release ${{ needs.release.outputs.version }} \
+          qgis-plugin-ci --verbose
+              release ${{ needs.release.outputs.version }} \
               --release-tag ${{ needs.release.outputs.tag }} \
               --disable-submodule-update \
               --github-token ${{ secrets.GITHUB_TOKEN }} \
-              --verbose
