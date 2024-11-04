@@ -54,7 +54,7 @@ jobs:
           echo "RELEASE_TAG=${RELEASE_TAG}"
           echo version=${{ needs.release.outputs.version }}
           echo tag=${{ needs.release.outputs.tag }}
-          qgis-plugin-ci --verbose \
+          qgis-plugin-ci -vvv \
               release ${{ needs.release.outputs.version }} \
               --release-tag ${{ needs.release.outputs.tag }} \
               --disable-submodule-update \
