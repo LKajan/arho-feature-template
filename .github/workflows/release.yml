@@ -45,6 +45,13 @@ jobs:
           sudo pip install qgis-plugin-ci --break-system-packages
       - name: Release
         run: |
+          sleep 20
+          REF=${{ github.ref }}
+          RELEASE_VERSION=${REF##*/}
+          RELEASE_TAG=${REF##*/}
+          echo "REF=${REF}"
+          echo "RELEASE_VERSION=${RELEASE_VERSION}"
+          echo "RELEASE_TAG=${RELEASE_TAG}"
           qgis-plugin-ci release ${{ needs.release.outputs.version }} \
               --release-tag ${{ needs.release.outputs.tag }} \
               --disable-submodule-update \
