@@ -43,5 +43,5 @@ jobs:
         run: |
           qgis-plugin-ci release ${{ needs.release.outputs.version }} \
               --disable-submodule-update \
-              --release-tag ${{ needs.release.outputs.tag }} \
               --github-token ${{ secrets.GITHUB_TOKEN }}
+              # --release-tag ${{ needs.release.outputs.tag }} \
