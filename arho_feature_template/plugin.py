@@ -149,7 +149,7 @@ class Plugin:
 
         self.load_land_use_plan_action = self.add_action(
             "",
-            text="Lataa/avaa kaavaa",
+            text="Lataa/avaa kaava",
             triggered_callback=self.load_existing_land_use_plan,
             parent=iface.mainWindow(),
             add_to_menu=True,
