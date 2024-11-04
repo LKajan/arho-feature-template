@@ -32,6 +32,10 @@ jobs:
         with:
           submodules: recursive
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+
       - name: Install dependencies
         run: |
           sudo apt update && sudo apt install qtbase5-dev qttools5-dev-tools
