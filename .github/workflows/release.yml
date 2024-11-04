@@ -27,6 +27,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  deploy:
+    runs-on: ubuntu-24.04
+    needs: release
+    steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -36,11 +40,9 @@ jobs:
         run: |
           sudo apt update && sudo apt install qtbase5-dev qttools5-dev-tools
           sudo pip install qgis-plugin-ci --break-system-packages
-
-      - name: Upload release
+      - name: Release
         run: |
-          qgis-plugin-ci -vvv \
-              release ${{ steps.version.outputs.version }} \
-              --release-tag ${{ steps.version.outputs.tag }} \
+          qgis-plugin-ci release ${{ needs.release.outputs.version }} \
+              --release-tag ${{ needs.release.outputs.tag }} \
               --disable-submodule-update \
               --github-token ${{ secrets.GITHUB_TOKEN }}
