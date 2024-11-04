@@ -37,22 +37,3 @@ jobs:
       - run: |
           echo "name: ${{ steps.release-drafter.outputs.tag_name }}"
           echo "tag=${{ steps.release-drafter.outputs.tag_name }}"
-
-  deploy:
-    runs-on: ubuntu-24.04
-    needs: update_release_draft
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-      - name: Install dependencies
-        run: |
-          sudo apt update && sudo apt install qtbase5-dev qttools5-dev-tools
-          sudo pip install qgis-plugin-ci --break-system-packages
-      - name: Release
-        run: |
-          qgis-plugin-ci release ${{ needs.update_release_draft.outputs.name }} \
-              --release-tag ${{ needs.update_release_draft.outputs.tag_name }} \
-              --disable-submodule-update \
-              --github-token ${{ secrets.GITHUB_TOKEN }}
