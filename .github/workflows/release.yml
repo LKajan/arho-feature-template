@@ -42,6 +42,6 @@ jobs:
       - name: Release
         run: |
           qgis-plugin-ci release ${{ needs.release.outputs.version }} \
+              --release-tag ${{ needs.release.outputs.tag }} \
               --disable-submodule-update \
               --github-token ${{ secrets.GITHUB_TOKEN }}
-              # --release-tag ${{ needs.release.outputs.tag }} \
