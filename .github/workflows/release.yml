@@ -52,7 +52,10 @@ jobs:
           echo "REF=${REF}"
           echo "RELEASE_VERSION=${RELEASE_VERSION}"
           echo "RELEASE_TAG=${RELEASE_TAG}"
+          echo version=${{ needs.release.outputs.version }}
+          echo tag=${{ needs.release.outputs.tag }}
           qgis-plugin-ci release ${{ needs.release.outputs.version }} \
               --release-tag ${{ needs.release.outputs.tag }} \
               --disable-submodule-update \
-              --github-token ${{ secrets.GITHUB_TOKEN }}
+              --github-token ${{ secrets.GITHUB_TOKEN }} \
+              --verbose
