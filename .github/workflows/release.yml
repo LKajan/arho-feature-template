@@ -27,35 +27,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  deploy:
-    runs-on: ubuntu-24.04
-    needs: release
-    steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.9"
-          cache: "pip"
+
       - name: Install dependencies
         run: |
           sudo apt update && sudo apt install qtbase5-dev qttools5-dev-tools
           sudo pip install qgis-plugin-ci --break-system-packages
-      - name: Release
+
+      - name: Upload release
         run: |
-          REF=${{ github.ref }}
-          RELEASE_VERSION=${REF##*/}
-          RELEASE_TAG=${REF##*/}
-          echo "REF=${REF}"
-          echo "RELEASE_VERSION=${RELEASE_VERSION}"
-          echo "RELEASE_TAG=${RELEASE_TAG}"
-          echo version=${{ needs.release.outputs.version }}
-          echo tag=${{ needs.release.outputs.tag }}
           qgis-plugin-ci -vvv \
-              release ${{ needs.release.outputs.version }} \
-              --release-tag ${{ needs.release.outputs.tag }} \
+              release ${{ steps.version.outputs.version }} \
+              --release-tag ${{ steps.version.outputs.tag }} \
               --disable-submodule-update \
               --github-token ${{ secrets.GITHUB_TOKEN }}
