@@ -4,13 +4,6 @@ on:
   push:
     branches:
       - main
-  # pull_request event is required only for autolabeler
-  pull_request:
-    # Only following types are handled by the action, but one can default to all as well
-    types: [opened, reopened, synchronize]
-  # pull_request_target event is required for autolabeler to support PRs from forks
-  pull_request_target:
-    types: [opened, reopened, synchronize]
 
 permissions:
   contents: read
@@ -23,7 +16,7 @@ jobs:
       contents: write
       # write permission is required for autolabeler
       # otherwise, read permission is required at least
-      pull-requests: write
+      pull-requests: read
     runs-on: ubuntu-latest
     outputs:
       name: ${{ steps.release-drafter.outputs.name }}
@@ -32,8 +25,31 @@ jobs:
       # Drafts your next Release notes as Pull Requests are merged into "main"
       - uses: release-drafter/release-drafter@v6
         id: release-drafter
+        with:
+          disable-autolabeler: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: |
           echo "name: ${{ steps.release-drafter.outputs.tag_name }}"
           echo "tag=${{ steps.release-drafter.outputs.tag_name }}"
+
+  deploy:
+    name: "Package and upload as a release asset"
+    runs-on: ubuntu-24.04
+    needs: update_release_draft
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install dependencies
+        run: |
+          sudo apt update && sudo apt install qtbase5-dev qttools5-dev-tools
+          sudo pip install qgis-plugin-ci --break-system-packages
+      - name: Release
+        run: |
+          qgis-plugin-ci release ${{ needs.update_release_draft.outputs.name }} \
+              --release-tag ${{ needs.update_release_draft.outputs.tag_name }} \
+              --disable-submodule-update \
+              --github-token ${{ secrets.GITHUB_TOKEN }}
