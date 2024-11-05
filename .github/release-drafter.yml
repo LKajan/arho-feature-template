@@ -2,11 +2,11 @@ name-template: "$RESOLVED_VERSION"
 tag-template: "v$RESOLVED_VERSION"
 
 template: |
-  ## Changes
+  ## Muutokset
 
   $CHANGES
 
-  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+  **Yksityiskohtaisempi muutosloki**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
 
 categories:
   - title: "🚀 Uudet ominaisuudet"
